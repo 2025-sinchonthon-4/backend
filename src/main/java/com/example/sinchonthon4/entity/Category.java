@@ -2,6 +2,7 @@ package com.example.sinchonthon4.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import java.util.List;
 
 @Getter
 @Setter
@@ -19,7 +20,7 @@ public class Category extends BaseEntity {
     @Column(nullable = false)
     private String name;
 
-    @Column(nullable = false)
-    private String subCategory;
-
+    @OneToMany(mappedBy = "category",
+            fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Quiz> quizzes;
 }
