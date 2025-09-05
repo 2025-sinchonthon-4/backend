@@ -1,5 +1,7 @@
 package com.example.sinchonthon4.config;
 
+import com.example.sinchonthon4.config.JwtProperties;
+import com.example.sinchonthon4.entity.CustomOAuth2User; // 🚩 CustomOAuth2User import 추가
 import com.example.sinchonthon4.entity.UserInfo;
 import com.example.sinchonthon4.service.UserInfoService;
 import io.jsonwebtoken.*;
@@ -11,6 +13,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails; // 🚩 UserDetails import 추가
 import org.springframework.stereotype.Component;
 
 import java.security.Key;
@@ -27,15 +30,14 @@ public class TokenProvider {
     private static final String TOKEN_TYPE_KEY = "type";
 
     private final String secret;
-
     private final long accessTokenValidityInMilliseconds;
     private final long refreshTokenValidityInMilliseconds;
-
     private Key key;
 
     @Autowired
     private UserInfoService userInfoService;
 
+    // JwtProperties를 주입받는 생성자는 그대로 유지
     public TokenProvider(JwtProperties jwtProperties) {
         this.secret = jwtProperties.getSecret();
         this.accessTokenValidityInMilliseconds = jwtProperties.getAccessTokenValidityInSeconds() * 1000;
@@ -45,6 +47,7 @@ public class TokenProvider {
         this.key = Keys.hmacShaKeyFor(keyBytes);
     }
 
+    // 🚩 createAccessToken 메소드 수정
     public String createAccessToken(Authentication authentication) {
         String authorities = authentication.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority)
@@ -53,8 +56,23 @@ public class TokenProvider {
         long now = (new Date()).getTime();
         Date validity = new Date(now + this.accessTokenValidityInMilliseconds);
 
+        // 🚩 OAuth2 로그인 유저와 일반 로그인 유저를 구분하여 이메일을 추출
+        String email;
+        Object principal = authentication.getPrincipal();
+
+        if (principal instanceof CustomOAuth2User) {
+            // OAuth2 로그인 시
+            email = ((CustomOAuth2User) principal).getUser().getEmail();
+        } else if (principal instanceof UserDetails) {
+            // 일반 로그인 시 (UserDetails를 구현한 객체)
+            email = ((UserDetails) principal).getUsername();
+        } else {
+            // 기타 경우
+            email = principal.toString();
+        }
+
         return Jwts.builder()
-                .setSubject(authentication.getName())
+                .setSubject(email) // ⬅️ 여기에 이메일을 Subject로 설정
                 .claim(AUTHORITIES_KEY, authorities)
                 .claim(TOKEN_TYPE_KEY, "access")
                 .signWith(key, SignatureAlgorithm.HS512)
@@ -62,18 +80,31 @@ public class TokenProvider {
                 .compact();
     }
 
+    // 🚩 Refresh Token도 동일한 방식으로 이메일을 사용하도록 수정 (일관성 유지)
     public String createRefreshToken(Authentication authentication) {
         long now = (new Date()).getTime();
         Date validity = new Date(now + this.refreshTokenValidityInMilliseconds);
 
+        String email;
+        Object principal = authentication.getPrincipal();
+
+        if (principal instanceof CustomOAuth2User) {
+            email = ((CustomOAuth2User) principal).getUser().getEmail();
+        } else if (principal instanceof UserDetails) {
+            email = ((UserDetails) principal).getUsername();
+        } else {
+            email = principal.toString();
+        }
+
         return Jwts.builder()
-                .setSubject(authentication.getName())
+                .setSubject(email) // ⬅️ 여기에 이메일을 Subject로 설정
                 .claim(TOKEN_TYPE_KEY, "refresh")
                 .signWith(key, SignatureAlgorithm.HS512)
                 .setExpiration(validity)
                 .compact();
     }
 
+    // getAuthentication 메소드는 수정할 필요 없음 (이미 Subject를 사용하고 있음)
     public Authentication getAuthentication(String token) {
         Claims claims = Jwts.parserBuilder()
                 .setSigningKey(key)
@@ -91,6 +122,7 @@ public class TokenProvider {
             authorities = new ArrayList<>();
         }
 
+        // 이제 claims.getSubject()는 이메일을 반환하므로, loadUserByUsername과 완벽하게 일치합니다.
         UserInfo userInfo = (UserInfo) userInfoService.loadUserByUsername(claims.getSubject());
         userInfo.setAuthorities(authorities);
 

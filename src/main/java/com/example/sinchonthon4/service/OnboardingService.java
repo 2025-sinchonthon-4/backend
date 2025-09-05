@@ -22,7 +22,6 @@ public class OnboardingService {
                 .orElseThrow(() -> new IllegalArgumentException("User not found with ID: " + principalUser.getUserId()));
 
         user.updateCategory(new HashSet<>(request.getCategory()));
-
         userRepository.save(user);
     }
 }

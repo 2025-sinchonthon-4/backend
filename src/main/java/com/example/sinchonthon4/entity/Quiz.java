@@ -37,8 +37,6 @@ public class Quiz extends BaseTimeEntity { // createdAt, updatedAt 상속
 
     private String hint;
 
-
-
     @OneToMany(mappedBy = "quiz", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<QuizChoice> choices = new ArrayList<>();
 }
