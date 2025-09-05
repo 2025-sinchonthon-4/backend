@@ -2,14 +2,15 @@ package com.example.sinchonthon4.controller;
 
 import com.example.sinchonthon4.dto.response.MyPageResponseDto;
 import com.example.sinchonthon4.dto.response.QuizLogDto;
+import com.example.sinchonthon4.entity.User;
+import com.example.sinchonthon4.repository.UserRepository;
 import com.example.sinchonthon4.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/users")
@@ -17,6 +18,7 @@ import java.util.List;
 public class UserController {
 
     private final UserService userService;
+    private final UserRepository userRepository;
 
     /**
      * 내 정보 조회 (마이페이지)
@@ -44,5 +46,22 @@ public class UserController {
 
         List<QuizLogDto> quizHistory = userService.getQuizHistory(memberId);
         return ResponseEntity.ok(quizHistory);
+    }
+
+    @GetMapping("/{id}/study-info")
+    public ResponseEntity<?> getStudyInfo(@PathVariable Long id) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("User not found"));
+
+        return ResponseEntity.ok(Map.of(
+                "todaySolvedCount", user.getTodaySolvedCount(),
+                "continuousStudyDays", user.getContinuousStudyDays()
+        ));
+    }
+
+    @PostMapping("/{id}/solve")
+    public ResponseEntity<?> solvedProblem(@PathVariable Long id) {
+        userService.recordSolvedProblem(id);
+        return ResponseEntity.ok("Solved recorded!");
     }
 }

@@ -106,4 +106,12 @@ public class UserService {
 
         // member.addExp() 내에서 변경된 내용은 @Transactional에 의해 자동으로 DB에 반영됩니다.
     }
+
+    public void recordSolvedProblem(Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("User not found"));
+
+        user.solvedProblem();
+        userRepository.save(user);
+    }
 }

@@ -56,6 +56,14 @@ public class User extends BaseTimeEntity implements Serializable {
     @Builder.Default // ⬅빌더가 이 기본값을 사용하도록 추가
     private Set<Category> category = new HashSet<>();
 
+    @Column(nullable = false)
+    private Integer todaySolvedCount = 0; // 오늘 푼 문제 수
+
+    @Column(nullable = false)
+    private Integer continuousStudyDays = 0; // 연속 학습 일수
+
+    private LocalDateTime lastStudyDate; // 마지막으로 학습한 날짜
+
     public void updateNickname(String nickname) {
         this.nickname = nickname;
     }
@@ -86,5 +94,25 @@ public class User extends BaseTimeEntity implements Serializable {
 
     public boolean isCategorySet() {
         return this.category != null && !this.category.isEmpty();
+    }
+
+    public void solvedProblem() {
+        LocalDateTime today = LocalDateTime.now();
+
+        if (lastStudyDate == null || !lastStudyDate.toLocalDate().equals(today.toLocalDate())) {
+            // 새로운 날이면 초기화
+            todaySolvedCount = 0;
+
+            // 마지막 학습일이 어제면 연속 학습 유지, 아니면 초기화
+            if (lastStudyDate != null &&
+                    lastStudyDate.toLocalDate().plusDays(1).equals(today.toLocalDate())) {
+                continuousStudyDays++;
+            } else {
+                continuousStudyDays = 1;
+            }
+        }
+
+        todaySolvedCount++;
+        lastStudyDate = today;
     }
 }
