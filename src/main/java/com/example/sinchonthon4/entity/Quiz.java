@@ -3,6 +3,8 @@ package com.example.sinchonthon4.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.List;
+
 @Getter
 @Setter
 @Builder
@@ -34,6 +36,9 @@ public class Quiz extends BaseEntity {
 
     @Column(nullable = false)
     private String explanation;
+
+    @Column(nullable = false)
+    private String answer;
 
     @Column(nullable = false)
     private String hint;
