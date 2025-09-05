@@ -66,7 +66,7 @@ public class QuizService {
         User user = userRepository.findByUserId(userId).orElseThrow(
                 ()-> new EntityNotFoundException("존재하지 않는 유저입니다.")
         );
-        List<Category> catList = user.getInterests().stream().toList();
+        List<Category> catList = user.getCategory().stream().toList();
         List<Quiz> quizList = quizRepository.findByCategoryIn(catList);
         Collections.shuffle(quizList);
         return quizList.subList(0, count).stream()
