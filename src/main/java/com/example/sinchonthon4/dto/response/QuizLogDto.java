@@ -16,4 +16,5 @@ public class QuizLogDto {
     private String explanation;
     private boolean isCorrect;
     private LocalDate solvedAt;
+    private String category;
 }
