@@ -38,6 +38,9 @@ public class Quiz extends BaseEntity {
     private String explanation;
 
     @Column(nullable = false)
+    private String answer;
+
+    @Column(nullable = false)
     private String hint;
 
 
