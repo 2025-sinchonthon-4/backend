@@ -18,8 +18,7 @@ public class Quiz extends BaseTimeEntity { // createdAt, updatedAt 상속
     @Column(name = "quiz_id")
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "category_id", nullable = false)
+    @Enumerated(EnumType.STRING)
     private Category category;
 
     @OneToMany(mappedBy = "quiz",
