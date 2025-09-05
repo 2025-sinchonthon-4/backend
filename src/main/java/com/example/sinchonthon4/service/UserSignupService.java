@@ -29,12 +29,6 @@ public class UserSignupService {
                 .name(join.getName())
                 .nickname(join.getNickname())
                 .phone(join.getPhone())
-                .bank(join.getBank())
-                .accountNumber(
-                        StringUtils.hasText(join.getAccountNumber())
-                                ? join.getAccountNumber()
-                                : null
-                )
                 .role(Role.USER)
                 .build();
 

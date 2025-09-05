@@ -24,7 +24,7 @@ public class User extends BaseEntity implements Serializable {
     @Column(nullable = false, unique = true)
     private String email;
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     private String password;
 
     private String name;
@@ -33,8 +33,6 @@ public class User extends BaseEntity implements Serializable {
     private String profileImage;
 
     private String socialId;
-    private String accountNumber;
-    private String bank;
 
     private String address;
 
