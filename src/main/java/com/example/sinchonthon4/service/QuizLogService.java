@@ -25,7 +25,7 @@ public class QuizLogService {
     @Transactional
     public QuizLogResponse create(Long userId, QuizLogCreateRequest req){
         User user = userRepository.findById(userId).orElseThrow(
-                ()-> new EntityNotFoundException("User with id " + userId + " not found")
+//                ()-> new EntityNotFoundException("User with id " + userId + " not found")
         );
         Quiz quiz = quizRepository.findById(req.quizId()).orElseThrow(
                 ()-> new EntityNotFoundException("Quiz with id " + req.quizId() + " not found")
@@ -43,7 +43,7 @@ public class QuizLogService {
         User user = userRepository.findById(userId).orElseThrow(
                 ()-> new EntityNotFoundException("User with id " + userId + " not found")
         );
-        return quizLogRepository.findByUser(user).stream()
+        return quizLogRepository.findAllByUser(user).stream()
                 .map(quizLog -> QuizLogResponse.of(quizLog))
                 .toList();
     }

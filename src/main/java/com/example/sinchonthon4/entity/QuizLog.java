@@ -16,13 +16,13 @@ import java.time.LocalDateTime;
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
-public class QuizLog extends BaseEntity{
+public class QuizLog extends BaseTimeEntity{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(updatable = false)
+    @Column(name = "quiz_log_id")
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY) // 다대일 관계
     @JoinColumn(name = "user_id", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
     private User user;
@@ -40,4 +40,15 @@ public class QuizLog extends BaseEntity{
 
     @Column(nullable = false)
     private Boolean isCorrect;
+
+    @Column(nullable = false)
+    private LocalDateTime createdAt = LocalDateTime.now();
+
+    // 생성자
+    public QuizLog(User user, Quiz quiz, String reply, Boolean isCorrect) {
+        this.user = user;
+        this.quiz = quiz;
+        this.reply = reply;
+        this.isCorrect = isCorrect;
+    }
 }

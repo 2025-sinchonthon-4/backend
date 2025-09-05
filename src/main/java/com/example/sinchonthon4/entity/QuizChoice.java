@@ -13,10 +13,10 @@ import java.time.LocalDateTime;
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
-public class QuizChoice extends BaseEntity{
+public class QuizChoice extends BaseTimeEntity{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(updatable = false)
+    @Column(name = "choice_id")
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -27,5 +27,5 @@ public class QuizChoice extends BaseEntity{
     private String content;
 
     @Column(nullable = false)
-    private Boolean isAnswer;
+    private boolean isAnswer = false;
 }
