@@ -1,7 +1,6 @@
 server:
   port: 8080 # 서버가 실행될 포트 번호
 
-
 spring:
   security:
     oauth2:
