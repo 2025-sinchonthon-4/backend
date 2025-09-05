@@ -20,7 +20,7 @@ public class QuizResponse {
         private String imgUrl;
         private String explanation;
         private String hint;
-        private String categoryName;
+        private String category;
         private List<ChoiceDto> choices;   // 객관식 / OX → 선택지, 주관식 → 빈 리스트
 
 
@@ -39,7 +39,7 @@ public class QuizResponse {
                         .imgUrl(quiz.getImgUrl())
                         .explanation(quiz.getExplanation())
                         .hint(quiz.getHint())
-                        .categoryName(quiz.getCategory().getName())
+                        .category(String.valueOf(quiz.getCategory()))
                         .choices(choiceDtos)
                         .build();
         }
