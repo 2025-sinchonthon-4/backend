@@ -12,6 +12,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class QuizLogService {
@@ -33,5 +35,17 @@ public class QuizLogService {
         quizLog.setQuiz(quiz);
         quizLogRepository.save(quizLog);
         return QuizLogResponse.of(quizLog);
+    }
+
+    @Transactional(readOnly = true)
+    public List<QuizLogResponse> getQuizLogs(Long userId){
+        User user = userRepository.findById(userId).orElseThrow(
+                ()-> new EntityNotFoundException("User with id " + userId + " not found")
+        );
+        return quizLogRepository.findByUser(user).stream()
+                .map(quizLog -> QuizLogResponse.of(quizLog))
+                .toList();
+
+
     }
 }

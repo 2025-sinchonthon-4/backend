@@ -7,10 +7,9 @@ import com.example.sinchonthon4.service.QuizLogService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 
 @RestController
@@ -22,6 +21,12 @@ public class QuizLogController {
     @PostMapping
     public ResponseEntity<QuizLogResponse> createQuizLog(@AuthenticationPrincipal UserInfo user, @RequestBody QuizLogCreateRequest req){
         QuizLogResponse res = quizLogService.create(user.getUser().getUserId(), req);
+        return ResponseEntity.ok(res);
+    }
+
+    @GetMapping("/history")
+    public ResponseEntity<List<QuizLogResponse>> getQuizLogHistory(@AuthenticationPrincipal UserInfo user){
+        List<QuizLogResponse> res = quizLogService.getQuizLogs(user.getUser().getUserId());
         return ResponseEntity.ok(res);
     }
 
