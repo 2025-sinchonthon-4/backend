@@ -9,7 +9,7 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-public class Quiz {
+public class Quiz extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -20,7 +20,7 @@ public class Quiz {
 
     @OneToMany(mappedBy = "quiz",
             fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<QuizChoice> quizChoice;
+    private List<QuizChoice> quizChoices;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
@@ -30,14 +30,13 @@ public class Quiz {
     private String title;
 
     @Column(nullable = false)
-    private String ImgUrl;
+    private String imgUrl;
 
     @Column(nullable = false)
     private String explanation;
 
     @Column(nullable = false)
     private String hint;
-
 
 
 
