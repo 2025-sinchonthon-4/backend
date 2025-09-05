@@ -1,6 +1,5 @@
 package com.example.sinchonthon4.service;
 
-import com.example.sinchonthon4.dto.request.QuizCountRequest;
 import com.example.sinchonthon4.dto.response.QuizResponse;
 import com.example.sinchonthon4.entity.*;
 import com.example.sinchonthon4.dto.request.QuizSubmitRequestDto;
@@ -14,7 +13,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 

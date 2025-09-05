@@ -1,6 +1,5 @@
 package com.example.sinchonthon4.entity;
 
-import com.example.sinchonthon4.dto.request.UserUpdateRequestDto;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
 import lombok.*;
