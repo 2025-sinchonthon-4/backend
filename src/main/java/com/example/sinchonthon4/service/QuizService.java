@@ -46,12 +46,20 @@ public class QuizService {
     public QuizSubmitResponseDto submitAnswer(Long memberId, Long quizId, QuizSubmitRequestDto requestDto) {
         Quiz quiz = quizRepository.findById(quizId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 퀴즈입니다."));
-
+        User user = userRepository.findByUserId(memberId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 사용자입니다"));
         // 1. 정답 확인
         boolean isCorrect = checkAnswer(quiz, requestDto.getReply());
 
         // 2. 유저 성장 로직 처리 (UserService에 위임)
         userService.processQuizResult(memberId, quizId, requestDto.getReply(), isCorrect);
+        QuizLog log = QuizLog.builder()
+                .reply(requestDto.getReply())
+                .isCorrect(isCorrect)
+                .user(user)
+                .quiz(quiz)
+                .build();
+        quizLogRepository.save(log);
 
         // 3. 최종 결과 DTO 생성 및 반환
         return new QuizSubmitResponseDto(isCorrect, requestDto.getReply(), quiz.getChoices().stream()
