@@ -18,7 +18,6 @@ public class Quiz extends BaseTimeEntity { // createdAt, updatedAt 상속
     private Long id;
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
     private Category category;
 
     @Enumerated(EnumType.STRING)
@@ -30,12 +29,15 @@ public class Quiz extends BaseTimeEntity { // createdAt, updatedAt 상속
 
     private String title;
 
+    @Column
     private String imgUrl;
 
-    @Column(nullable = false)
+    @Column
     private String explanation;
 
     private String hint;
+
+
 
     @OneToMany(mappedBy = "quiz", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<QuizChoice> choices = new ArrayList<>();
