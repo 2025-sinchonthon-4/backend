@@ -6,6 +6,7 @@ import com.example.sinchonthon4.entity.Quiz;
 import com.example.sinchonthon4.entity.QuizLog;
 import com.example.sinchonthon4.entity.User;
 import com.example.sinchonthon4.repository.QuizLogRepository;
+import com.example.sinchonthon4.repository.QuizRepository;
 import com.example.sinchonthon4.repository.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -45,7 +46,7 @@ public class QuizLogService {
         return quizLogRepository.findByUser(user).stream()
                 .map(quizLog -> QuizLogResponse.of(quizLog))
                 .toList();
-
-
     }
+
+
 }
