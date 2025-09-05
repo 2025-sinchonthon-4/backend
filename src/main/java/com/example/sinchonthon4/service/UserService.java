@@ -78,6 +78,7 @@ public class UserService {
                             .explanation(quiz.getExplanation()) // [추가]
                             .isCorrect(log.getIsCorrect())
                             .solvedAt(log.getCreatedAt().toLocalDate()) // [수정]
+                            .category(quiz.getCategory().toString())
                             .build();
                 })
                 .collect(Collectors.toList());
