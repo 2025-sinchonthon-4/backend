@@ -52,14 +52,14 @@ public class QuizService {
         boolean isCorrect = checkAnswer(quiz, requestDto.getReply());
 
         // 2. 유저 성장 로직 처리 (UserService에 위임)
-        userService.processQuizResult(memberId, quizId, requestDto.getReply(), isCorrect);
-        QuizLog log = QuizLog.builder()
-                .reply(requestDto.getReply())
-                .isCorrect(isCorrect)
-                .user(user)
-                .quiz(quiz)
-                .build();
-        quizLogRepository.save(log);
+//        userService.processQuizResult(memberId, quizId, requestDto.getReply(), isCorrect);
+//        QuizLog log = QuizLog.builder()
+//                .reply(requestDto.getReply())
+//                .isCorrect(isCorrect)
+//                .user(user)
+//                .quiz(quiz)
+//                .build();
+//        quizLogRepository.save(log);
 
         // 3. 최종 결과 DTO 생성 및 반환
         return new QuizSubmitResponseDto(isCorrect, requestDto.getReply(), quiz.getChoices().stream()
