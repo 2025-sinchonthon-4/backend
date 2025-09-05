@@ -52,7 +52,7 @@ public class QuizService {
         boolean isCorrect = checkAnswer(quiz, requestDto.getReply());
 
         // 2. 유저 성장 로직 처리 (UserService에 위임)
-//        userService.processQuizResult(memberId, quizId, requestDto.getReply(), isCorrect);
+          userService.processQuizResult(memberId, quizId, requestDto.getReply(), isCorrect);
 //        QuizLog log = QuizLog.builder()
 //                .reply(requestDto.getReply())
 //                .isCorrect(isCorrect)

@@ -10,6 +10,7 @@ import java.util.Collection;
 @Data
 @Builder
 public class UserInfo implements UserDetails {
+    private Long userId;
     private String email;
     private String name;
     private User user;
