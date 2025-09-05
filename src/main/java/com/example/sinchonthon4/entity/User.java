@@ -31,10 +31,9 @@ public class User extends BaseEntity implements Serializable {
     private String nickname;
     private String phone;
     private String profileImage;
-
     private String socialId;
-
-    private String address;
+    private int level;
+    private int exp;
 
     @Enumerated(EnumType.STRING)
     private Role role;
@@ -48,5 +47,10 @@ public class User extends BaseEntity implements Serializable {
 
     public void updateProfileImage(String profileImage) {
         this.profileImage = profileImage;
+    }
+
+    public void updateCategory(set<Category> category){
+        this.category.clear();
+        this.category.addAll(themes);
     }
 }
