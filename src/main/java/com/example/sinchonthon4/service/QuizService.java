@@ -91,4 +91,11 @@ public class QuizService {
             return correctAnswer.equalsIgnoreCase(clientReply);
         }
     }
+
+    @Transactional
+    public QuizResponse createQuiz(QuizCreateReq req){
+        Quiz quiz = Quiz.builder()
+                .
+                .build();
+    }
 }
