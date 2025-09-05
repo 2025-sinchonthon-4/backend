@@ -26,8 +26,8 @@ public class QuizResponse {
 
         //객관식인지 체크
         public static QuizResponse fromEntity(Quiz quiz) {
-                List<ChoiceDto> choiceDtos = (quiz.getQuizChoices() != null)
-                        ? quiz.getQuizChoices().stream()
+                List<ChoiceDto> choiceDtos = (quiz.getChoices() != null)
+                        ? quiz.getChoices().stream()
                         .map(ChoiceDto::of)
                         .toList()
                         : List.of();

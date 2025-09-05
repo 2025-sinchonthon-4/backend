@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Getter
-@Setter
 @Builder
 @AllArgsConstructor
 @Entity
@@ -19,11 +18,8 @@ public class Quiz extends BaseTimeEntity { // createdAt, updatedAt 상속
     private Long id;
 
     @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private Category category;
-
-    @OneToMany(mappedBy = "quiz",
-            fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<QuizChoice> quizChoices;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
@@ -34,19 +30,12 @@ public class Quiz extends BaseTimeEntity { // createdAt, updatedAt 상속
 
     private String title;
 
-    @Column(nullable = false)
     private String imgUrl;
 
     @Column(nullable = false)
     private String explanation;
 
-    @Column(nullable = false)
-    private String answer;
-
-    @Column(nullable = false)
     private String hint;
-
-
 
     @OneToMany(mappedBy = "quiz", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<QuizChoice> choices = new ArrayList<>();

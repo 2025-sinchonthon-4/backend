@@ -1,6 +1,7 @@
 package com.example.sinchonthon4.dto.response;
 
 import com.example.sinchonthon4.entity.Quiz;
+import com.example.sinchonthon4.entity.QuizChoice;
 import com.example.sinchonthon4.entity.QuizType;
 import lombok.*;
 
@@ -22,8 +23,8 @@ public class QuizAnswerResponse {
     private List<ChoiceDto> choices;
 
     public static QuizAnswerResponse of(Quiz quiz) {
-        List<ChoiceDto> choiceDtos = quiz.getQuizChoices() != null
-                ? quiz.getQuizChoices().stream()
+        List<ChoiceDto> choiceDtos = quiz.getChoices() != null
+                ? quiz.getChoices().stream()
                 .map(ChoiceDto::of)
                 .collect(Collectors.toList())
                 : List.of();
@@ -32,7 +33,11 @@ public class QuizAnswerResponse {
                 .quizId(quiz.getId())
                 .type(quiz.getType())
                 .title(quiz.getTitle())
-                .correctAnswer(quiz.getAnswer())
+                .correctAnswer(quiz.getChoices().stream()
+                        .filter(QuizChoice::isAnswer)
+                        .findFirst()
+                        .map(QuizChoice::getContent)
+                        .orElse("정답 없음"))
                 .explanation(quiz.getExplanation())
                 .choices(choiceDtos)
                 .build();
