@@ -3,9 +3,11 @@ package com.example.sinchonthon4.service;
 import com.example.sinchonthon4.config.TokenProvider;
 import com.example.sinchonthon4.entity.CustomOAuth2User;
 import com.example.sinchonthon4.entity.User;
+import com.example.sinchonthon4.repository.CookieAuthorizationRequestRepository;
 import com.example.sinchonthon4.repository.UserRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -13,21 +15,29 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.util.UriComponentsBuilder;
+import org.springframework.security.oauth2.client.web.AuthorizationRequestRepository;
+import org.springframework.security.oauth2.core.endpoint.OAuth2AuthorizationRequest;
 
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 @Component
 @RequiredArgsConstructor
 @Slf4j
-public class OAuth2AuthenticationSuccessHandler implements AuthenticationSuccessHandler {
+public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
 
     private final TokenProvider tokenProvider;
     private final ObjectMapper objectMapper;
     private final UserRepository userRepository;
+    private final AuthorizationRequestRepository<OAuth2AuthorizationRequest> authorizationRequestRepository;
+
+    private final String DEFAULT_REDIRECT_URI = "http://localhost:3000/oauth-redirect";
 
     @Override
     @Transactional
@@ -52,17 +62,31 @@ public class OAuth2AuthenticationSuccessHandler implements AuthenticationSuccess
 
         String accessToken = tokenProvider.createAccessToken(authentication);
 
-        Map<String, Object> resp = new HashMap<>();
-        resp.put("success", true);
-        resp.put("accessToken", accessToken);
-        resp.put("needsOnboarding", needsOnboarding);
+        Optional<String> redirectUri = CookieUtil.getCookie(request, "redirect_uri")
+                .map(Cookie::getValue);
 
-        response.setContentType(MediaType.APPLICATION_JSON_VALUE);
-        response.setCharacterEncoding("UTF-8");
-        response.setStatus(HttpServletResponse.SC_OK);
-        response.getWriter().write(objectMapper.writeValueAsString(resp));
-        response.getWriter().flush();
+        // redirectUri 파라미터가 있다면 그 값을, 없다면 기본값을 사용합니다.
+        String targetUrl = redirectUri.orElse(DEFAULT_REDIRECT_URI);
+
+        // ✅ 3. 가져온 URI에 토큰과 상태를 담아 최종 리다이렉트 주소를 만듭니다.
+        targetUrl = UriComponentsBuilder.fromUriString(targetUrl)
+                .queryParam("accessToken", accessToken)
+                .queryParam("needsOnboarding", needsOnboarding)
+                .build().toUriString();
+
+        // ✅ 4. 인증 관련 임시 쿠키/세션을 정리합니다.
+        clearAuthenticationAttributes(request, response);
+
+        getRedirectStrategy().sendRedirect(request, response, targetUrl);
 
         log.info("JWT 발급 완료: {}, 온보딩 필요 여부: {}", accessToken, needsOnboarding);
+    }
+
+    protected void clearAuthenticationAttributes(HttpServletRequest request, HttpServletResponse response) {
+        super.clearAuthenticationAttributes(request);
+        // ✅ removeAuthorizationRequest 대신 removeAuthorizationRequestCookies를 호출해야 합니다.
+        if (authorizationRequestRepository instanceof CookieAuthorizationRequestRepository) {
+            ((CookieAuthorizationRequestRepository) authorizationRequestRepository).removeAuthorizationRequestCookies(request, response);
+        }
     }
 }
