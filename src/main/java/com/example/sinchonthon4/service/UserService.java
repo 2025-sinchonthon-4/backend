@@ -2,6 +2,7 @@ package com.example.sinchonthon4.service;
 
 import com.example.sinchonthon4.dto.response.MyPageResponseDto;
 import com.example.sinchonthon4.dto.response.QuizLogDto;
+import com.example.sinchonthon4.entity.QuizChoice;
 import com.example.sinchonthon4.entity.User;
 import com.example.sinchonthon4.entity.Quiz;
 import com.example.sinchonthon4.entity.QuizLog;
@@ -59,13 +60,26 @@ public class UserService {
         List<QuizLog> quizLogs = quizLogRepository.findAllByUser(user);
 
         return quizLogs.stream()
-                .map(log -> QuizLogDto.builder()
-                        .quizId(log.getQuiz().getId())
-                        .quizQuestion(log.getQuiz().getQuestion()) // 퀴즈 질문
-                        .myReply(log.getReply())
-                        .isCorrect(log.getIsCorrect())
-                        .solvedAt(log.getCreatedAt())
-                        .build())
+                .map(log -> {
+                    Quiz quiz = log.getQuiz();
+
+                    // 퀴즈의 선택지들 중에서 정답을 찾아냄
+                    String correctAnswer = quiz.getChoices().stream()
+                            .filter(QuizChoice::isAnswer)
+                            .findFirst()
+                            .map(QuizChoice::getContent)
+                            .orElse("정답 정보 없음");
+
+                    return QuizLogDto.builder()
+                            .quizId(quiz.getId())
+                            .quizQuestion(quiz.getQuestion())
+                            .myReply(log.getReply())
+                            .correctAnswer(correctAnswer) // [추가]
+                            .explanation(quiz.getExplanation()) // [추가]
+                            .isCorrect(log.getIsCorrect())
+                            .solvedAt(log.getCreatedAt().toLocalDate()) // [수정]
+                            .build();
+                })
                 .collect(Collectors.toList());
     }
 

@@ -1,6 +1,7 @@
 package com.example.sinchonthon4.dto.response;
 
 import com.example.sinchonthon4.entity.Quiz;
+import com.example.sinchonthon4.entity.QuizChoice;
 import com.example.sinchonthon4.entity.User;
 import lombok.*;
 
@@ -17,11 +18,18 @@ public class QuizSubmitResponse {
     private String answer;
 
     public static QuizSubmitResponse of(Quiz quiz, User user,String reply) {
+
+        String correctAnswer = quiz.getChoices().stream()
+                .filter(QuizChoice::isAnswer)
+                .findFirst()
+                .map(QuizChoice::getContent)
+                .orElse("정답 없음");
+
             return QuizSubmitResponse.builder()
                     .quizId(quiz.getId())
                     .userId(user.getUserId())
                     .reply(reply)
-                    .answer(quiz.getAnswer())
+                    .answer(correctAnswer) // 위에서 찾은 정답을 사용
                     .build();
     }
 }

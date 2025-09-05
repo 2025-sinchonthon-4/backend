@@ -9,8 +9,8 @@ public record QuizLogResponse(
         String title,
         QuizType type,
         String reply,
-        Boolean isCorrect,
-        boolean b, LocalDateTime timestamp
+        boolean isCorrect,
+        LocalDateTime solvedAt
 ) {
     public static QuizLogResponse of(QuizLog q) {
         return new QuizLogResponse(
@@ -18,7 +18,6 @@ public record QuizLogResponse(
                 q.getQuiz().getType(),
                 q.getReply(),
                 q.getIsCorrect(),
-                q.getQuiz().getAnswer().equals(q.getReply()),
                 q.getCreatedAt()
         );
     }

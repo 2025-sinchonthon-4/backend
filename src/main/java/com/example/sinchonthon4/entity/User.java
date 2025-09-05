@@ -60,6 +60,15 @@ public class User extends BaseTimeEntity implements Serializable {
         this.nickname = nickname;
     }
 
+
+    @Column(nullable = false)
+    private LocalDateTime updatedAt = LocalDateTime.now();
+
+    @ElementCollection
+    @Enumerated(EnumType.STRING)
+    @Column
+    private Set<Category> interests = new HashSet<>();
+
     // 레벨, 경험치 업데이트를 위한 편의 메서드 (추후 구현)
     public void addExp(int amount) {
         this.exp += amount;

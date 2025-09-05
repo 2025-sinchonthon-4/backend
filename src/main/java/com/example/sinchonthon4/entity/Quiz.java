@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Getter
-@Setter
 @Builder
 @AllArgsConstructor
 @Entity
@@ -30,16 +29,12 @@ public class Quiz extends BaseTimeEntity { // createdAt, updatedAt 상속
 
     private String title;
 
-    @Column(nullable = false)
+    @Column
     private String imgUrl;
 
-    @Column(nullable = false)
+    @Column
     private String explanation;
 
-    @Column(nullable = false)
-    private String answer;
-
-    @Column(nullable = false)
     private String hint;
 
     @OneToMany(mappedBy = "quiz", cascade = CascadeType.ALL, orphanRemoval = true)
