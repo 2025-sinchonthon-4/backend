@@ -21,11 +21,14 @@ public class User extends BaseTimeEntity implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "member_id")
-    private Long id;
+    @Column(name = "user_id")
+    private Long userId;
 
     @Column(nullable = false, unique = true)
     private String email;
+
+    @Column(nullable = true)
+    private String password;
 
     private String name;
     private String phone;
@@ -34,12 +37,11 @@ public class User extends BaseTimeEntity implements Serializable {
     @Column(nullable = false)
     private String nickname;
 
-    @Column(nullable = false)
-    private String provider; // 예: "KAKAO"
 
     @Column(nullable = false)
-    private String providerId; // 카카오에서 제공하는 고유 ID
+    private String socialId; // 카카오에서 제공하는 고유 ID
     private String address;
+
 
     @Enumerated(EnumType.STRING)
     private Role role;
@@ -64,6 +66,7 @@ public class User extends BaseTimeEntity implements Serializable {
     public void addExp(int amount) {
         this.exp += amount;
         // 레벨업 체크 로직 추가
+    }
 
     public void updateProfileImage(String profileImage) {
         this.profileImage = profileImage;
