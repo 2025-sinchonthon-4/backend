@@ -52,7 +52,8 @@ public class User extends BaseTimeEntity implements Serializable {
 
     @ElementCollection(targetClass = Category.class)
     @Column(name = "category")
-    @Builder.Default // ⬅️ 빌더가 이 기본값을 사용하도록 추가
+    @Enumerated(EnumType.STRING)
+    @Builder.Default // ⬅빌더가 이 기본값을 사용하도록 추가
     private Set<Category> category = new HashSet<>();
 
     public void updateNickname(String nickname) {

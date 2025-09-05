@@ -3,6 +3,7 @@ package com.example.sinchonthon4.config;
 import com.example.sinchonthon4.config.CustomJwtFilter;
 import com.example.sinchonthon4.config.JwtAccessDeniedHandler;
 import com.example.sinchonthon4.config.JwtAuthenticationEntryPoint;
+import com.example.sinchonthon4.repository.CookieAuthorizationRequestRepository;
 import com.example.sinchonthon4.service.KakaoOAuth2UserService;
 import com.example.sinchonthon4.service.OAuth2AuthenticationSuccessHandler;
 import lombok.RequiredArgsConstructor;
@@ -37,6 +38,8 @@ public class SecurityConfig {
     private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
     private final JwtAccessDeniedHandler jwtAccessDeniedHandler;
 
+    private final CookieAuthorizationRequestRepository cookieAuthorizationRequestRepository;
+
     // ✅ 1. 공개 경로용 SecurityFilterChain (JWT 필터 없음)
     @Bean
     @Order(1)
@@ -53,13 +56,17 @@ public class SecurityConfig {
                 .securityMatcher(
                         "/", "/home", "/login/**", "/oauth2/**", "/h2-console/**",
                         "/api/auth/login", "/static/**", "/favicon.ico", "/auth", "/Signup",
-                        "/css/**", "/js/**", "/images/**", "/products/**", "/ws-chat/**",
-                        "/api/chat/**", "/ws-chat", "/farm/**", "api/auth/signup1"
+                        "/css/**", "/js/**", "/images/**", "/products/**", "/api/auth/signup1", "/quizLogs/**"
+                        ,"/quiz/**"
                 )
                 .authorizeHttpRequests(authz -> authz.anyRequest().permitAll())
                 .oauth2Login(oauth2 -> oauth2
-                    .userInfoEndpoint(userInfo -> userInfo.userService(kakaoOAuth2UserService))
-                    .successHandler(oAuth2AuthenticationSuccessHandler)
+                        // ✅ 인증 요청을 쿠키에 임시 저장하도록 설정
+                        .authorizationEndpoint(auth -> auth
+                                .authorizationRequestRepository(cookieAuthorizationRequestRepository)
+                        )
+                        .userInfoEndpoint(userInfo -> userInfo.userService(kakaoOAuth2UserService))
+                        .successHandler(oAuth2AuthenticationSuccessHandler)
                 );
 
         return http.build();
@@ -74,22 +81,8 @@ public class SecurityConfig {
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 // 이 필터 체인이 적용될 경로 지정
-                .securityMatcher("/api/v1/**", "/reviews/**", "/posts/**", "/comment/**",
-                        "/mypage/**", "/chat/**", "/like/**", "/pay/**", "/profile/**", "/api/chatbot/**", "api/auth/signup2")
+                .securityMatcher("/api/v1/**", "api/auth/signup2")
                 .authorizeHttpRequests(authz -> authz
-                        .requestMatchers(HttpMethod.POST, "/reviews/**").authenticated()
-                        .requestMatchers(HttpMethod.DELETE, "/reviews/**").authenticated()
-                        .requestMatchers(HttpMethod.POST, "/comment").authenticated()
-                        .requestMatchers(HttpMethod.PATCH,"/mypage/**").authenticated()
-                        .requestMatchers(HttpMethod.POST,"/mypage/**").authenticated()
-                        .requestMatchers(HttpMethod.GET,"/mypage/**").authenticated()
-                        .requestMatchers(HttpMethod.POST, "/chat/**").authenticated()
-                        .requestMatchers(HttpMethod.GET, "/chat/**").authenticated()
-                        .requestMatchers(HttpMethod.PATCH, "/chat/**").authenticated()
-                        .requestMatchers(HttpMethod.POST, "/like/**").authenticated()
-                        .requestMatchers(HttpMethod.GET, "/like/**").authenticated()
-                        .requestMatchers(HttpMethod.PATCH, "/pay/**").authenticated()
-                        .requestMatchers(HttpMethod.GET, "/pay/**").authenticated()
                         .requestMatchers(HttpMethod.POST, "/api/auth/signup2").authenticated()
                         .anyRequest().permitAll()
                 )
@@ -122,8 +115,7 @@ public class SecurityConfig {
                 "http://localhost:5173",
                 "https://spacefarm.shop",
                 "http://localhost:8080",
-                "https://jiangxy.github.io",
-                "https://www.spacefarm.cloud", "https://spacefarm-chatbot-app.fly.dev", "http://shinae/fly.dev"
+                "https://cenchi.vercel.app/"
         ));
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
         configuration.setAllowedHeaders(Arrays.asList("*"));
