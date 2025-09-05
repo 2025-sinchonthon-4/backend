@@ -8,11 +8,11 @@ import lombok.*;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public static class ChoiceDto {
+public class ChoiceDto {
     private Long choiceId;
     private String content;
 
-    public static ChoiceDto fromEntity(QuizChoice choice) {
+    public static ChoiceDto of(QuizChoice choice) {
         return ChoiceDto.builder()
                 .choiceId(choice.getId())
                 .content(choice.getContent())

@@ -7,7 +7,6 @@ import lombok.*;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class QuizAnswerResquest {
-    private Long userId;
-    private String answer;
+public class QuizCountRequest {
+    private int limit;  // 몇 문제를 불러올지
 }

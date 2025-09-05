@@ -28,7 +28,7 @@ public class QuizResponse {
         public static QuizResponse fromEntity(Quiz quiz) {
                 List<ChoiceDto> choiceDtos = (quiz.getQuizChoices() != null)
                         ? quiz.getQuizChoices().stream()
-                        .map(ChoiceDto::fromEntity)
+                        .map(ChoiceDto::of)
                         .toList()
                         : List.of();
 
@@ -39,7 +39,7 @@ public class QuizResponse {
                         .imgUrl(quiz.getImgUrl())
                         .explanation(quiz.getExplanation())
                         .hint(quiz.getHint())
-                        .categoryName(quiz.getCategory().getId())
+                        .categoryName(quiz.getCategory().getName())
                         .choices(choiceDtos)
                         .build();
         }

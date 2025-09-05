@@ -6,6 +6,7 @@ import com.example.sinchonthon4.entity.Quiz;
 import com.example.sinchonthon4.entity.QuizLog;
 import com.example.sinchonthon4.entity.User;
 import com.example.sinchonthon4.repository.QuizLogRepository;
+import com.example.sinchonthon4.repository.QuizRepository;
 import com.example.sinchonthon4.repository.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -22,7 +23,7 @@ public class QuizLogService {
     @Transactional
     public QuizLogResponse create(Long userId, QuizLogCreateRequest req){
         User user = userRepository.findById(userId).orElseThrow(
-                ()-> new EntityNotFoundException("User with id " + userId + " not found")
+//                ()-> new EntityNotFoundException("User with id " + userId + " not found")
         );
         Quiz quiz = quizRepository.findById(req.quizId()).orElseThrow(
                 ()-> new EntityNotFoundException("Quiz with id " + req.quizId() + " not found")
