@@ -36,26 +36,29 @@ public class User extends BaseTimeEntity implements Serializable {
     @Column(nullable = false)
     private String nickname;
 
-
     @Column(nullable = false)
     private String socialId; // 카카오에서 제공하는 고유 ID
-    private String address;
 
     @Enumerated(EnumType.STRING)
     private Role role;
+
     @Column(nullable = false)
     private Integer level = 1; // 기본 레벨 1
 
     @Column(nullable = false)
     private Integer exp = 0; // 기본 경험치 0
+
     @Enumerated(EnumType.STRING)
     private SocialType socialType;
 
-    @Column(nullable = false)
-    private LocalDateTime createdAt = LocalDateTime.now();
+    @ElementCollection(targetClass = Category.class)
+    @Column(name = "category")
+    private Set<Category> category;
+
     public void updateNickname(String nickname) {
         this.nickname = nickname;
     }
+
 
     @Column(nullable = false)
     private LocalDateTime updatedAt = LocalDateTime.now();
@@ -73,5 +76,14 @@ public class User extends BaseTimeEntity implements Serializable {
 
     public void updateProfileImage(String profileImage) {
         this.profileImage = profileImage;
+    }
+
+    public void updateCategory(Set<Category> category){
+        this.category.clear();
+        this.category.addAll(category);
+    }
+
+    public boolean isCategorySet() {
+        return this.category != null && !this.category.isEmpty();
     }
 }

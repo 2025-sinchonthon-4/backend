@@ -2,7 +2,7 @@ package com.example.sinchonthon4.service;
 
 import com.example.sinchonthon4.config.TokenProvider;
 import com.example.sinchonthon4.entity.CustomOAuth2User;
-import com.example.sinchonthon4.entity.UserInfo;
+import com.example.sinchonthon4.entity.User;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -15,6 +15,7 @@ import org.springframework.security.web.authentication.AuthenticationSuccessHand
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.Map;
 
 @Component
@@ -31,19 +32,20 @@ public class OAuth2AuthenticationSuccessHandler implements AuthenticationSuccess
                                         Authentication authentication)
             throws IOException, ServletException {
 
-        log.info("OAuth2 로그인 성공, JWT 발급 시작");
+        log.info("OAuth2 로그인 성공, JWT 발급 및 온보딩 상태 확인 시작");
 
-        // 1) Authentication에서 UserInfo 꺼내기
         CustomOAuth2User customOAuth2User = (CustomOAuth2User) authentication.getPrincipal();
 
-        // 2) TokenProvider로 JWT 생성
+        User user = customOAuth2User.getUser();
+
+        boolean needsOnboarding = !user.isCategorySet();
+
         String accessToken = tokenProvider.createAccessToken(authentication);
 
-        // 3) JSON 응답 작성
-        Map<String, Object> resp = Map.of(
-                "success", true,
-                "accessToken", accessToken
-        );
+        Map<String, Object> resp = new HashMap<>();
+        resp.put("success", true);
+        resp.put("accessToken", accessToken);
+        resp.put("needsOnboarding", needsOnboarding);
 
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
         response.setCharacterEncoding("UTF-8");
@@ -51,6 +53,6 @@ public class OAuth2AuthenticationSuccessHandler implements AuthenticationSuccess
         response.getWriter().write(objectMapper.writeValueAsString(resp));
         response.getWriter().flush();
 
-        log.info("JWT 발급 완료: {}", accessToken);
+        log.info("JWT 발급 완료: {}, 온보딩 필요 여부: {}", accessToken, needsOnboarding);
     }
 }
