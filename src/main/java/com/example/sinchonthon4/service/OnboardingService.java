@@ -21,10 +21,7 @@ public class OnboardingService {
         User user = userRepository.findByUserId(principalUser.getUserId())
                 .orElseThrow(() -> new IllegalArgumentException("User not found with ID: " + principalUser.getUserId()));
 
-        user.updateOnboardingInfo(
-                request.getPreferredDong(),
-                new HashSet<>(request.getThemes())
-        );
+        user.updateCategory(new HashSet<>(request.getCategory()));
 
         userRepository.save(user);
     }

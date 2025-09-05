@@ -41,6 +41,10 @@ public class User extends BaseEntity implements Serializable {
     @Enumerated(EnumType.STRING)
     private SocialType socialType;
 
+    @ElementCollection(targetClass = Category.class)
+    @Column(name = "category")
+    private Set<Category> category;
+
     public void updateNickname(String nickname) {
         this.nickname = nickname;
     }
@@ -49,8 +53,12 @@ public class User extends BaseEntity implements Serializable {
         this.profileImage = profileImage;
     }
 
-    public void updateCategory(set<Category> category){
+    public void updateCategory(Set<Category> category){
         this.category.clear();
-        this.category.addAll(themes);
+        this.category.addAll(category);
+    }
+
+    public boolean isCategorySet() {
+        return this.category != null && !this.category.isEmpty();
     }
 }
