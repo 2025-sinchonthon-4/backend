@@ -17,7 +17,7 @@ public class QuizResponse {
 
         private Long quizId;
         private QuizType type;
-        private String title;
+        private String question;
         private String imgUrl;
         private String explanation;
         private String hint;
@@ -36,7 +36,7 @@ public class QuizResponse {
                 return QuizResponse.builder()
                         .quizId(quiz.getId())
                         .type(quiz.getType())
-                        .title(quiz.getTitle())
+                        .question(quiz.getTitle())
                         .imgUrl(quiz.getImgUrl())
                         .explanation(quiz.getExplanation())
                         .hint(quiz.getHint())
