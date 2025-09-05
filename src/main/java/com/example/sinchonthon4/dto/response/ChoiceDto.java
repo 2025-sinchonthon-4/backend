@@ -11,11 +11,13 @@ import lombok.*;
 public class ChoiceDto {
     private Long choiceId;
     private String content;
+    private Boolean isAnswer;
 
     public static ChoiceDto of(QuizChoice choice) {
         return ChoiceDto.builder()
                 .choiceId(choice.getId())
                 .content(choice.getContent())
+                .isAnswer(choice.isAnswer())
                 .build();
     }
 }

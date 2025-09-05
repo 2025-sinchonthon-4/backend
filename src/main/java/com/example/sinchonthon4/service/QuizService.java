@@ -29,12 +29,14 @@ public class QuizService {
     /**
      * 랜덤 퀴즈 조회
      */
-    public QuizResponseDto getRandomQuiz() {
-        Quiz quiz = quizRepository.findRandomQuiz();
-        if (quiz == null) {
+    public List<QuizResponseDto> getRandomQuiz(Integer count) {
+        List<Quiz> randList = quizRepository.findRandomQuizzes(count);
+        if (randList == null) {
             throw new IllegalArgumentException("표시할 퀴즈가 없습니다.");
         }
-        return QuizResponseDto.from(quiz); // DTO 변환
+        return randList.stream()
+                .map(quiz -> QuizResponseDto.from(quiz))
+                .toList(); // DTO 변환
     }
 
     /**
@@ -52,14 +54,18 @@ public class QuizService {
         userService.processQuizResult(memberId, quizId, requestDto.getReply(), isCorrect);
 
         // 3. 최종 결과 DTO 생성 및 반환
-        return new QuizSubmitResponseDto(isCorrect, quiz.getExplanation());
+        return new QuizSubmitResponseDto(isCorrect, requestDto.getReply(), quiz.getChoices().stream()
+                .filter(QuizChoice::isAnswer)
+                .findFirst()
+                .map(QuizChoice::getContent)
+                .orElse(""), quiz.getExplanation());
     }
 
     /**
      * 카테고리별 퀴즈 출제
      */
     @Transactional
-    public List<QuizResponse> createQuizByCategory(Long userId, Integer count) {
+    public List<QuizResponseDto> createQuizByCategory(Long userId, Integer count) {
         // TODO: 카테고리별로 퀴즈를 생성하는 로직 구현
         User user = userRepository.findByUserId(userId).orElseThrow(
                 ()-> new EntityNotFoundException("존재하지 않는 유저입니다.")
@@ -68,8 +74,14 @@ public class QuizService {
         List<Quiz> quizList = quizRepository.findByCategoryIn(catList);
         Collections.shuffle(quizList);
         return quizList.subList(0, count).stream()
-                .map(quiz-> {return QuizResponse.fromEntity(quiz);})
+                .map(quiz-> {return QuizResponseDto.from(quiz);})
                 .toList();
+    }
+    @Transactional
+    public QuizResponse getQuiz(Long quizId) {
+        Quiz quiz = quizRepository.findById(quizId)
+                .orElseThrow(()->new EntityNotFoundException("존재하지 않는 퀴즈입니다."));
+        return QuizResponse.fromEntity(quiz);
     }
 
     // 정답 체크 로직

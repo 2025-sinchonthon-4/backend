@@ -15,6 +15,7 @@ public class QuizResponseDto {
     private QuizType type;
     private String question;
     private String hint;
+    private String imgUrl;
     private List<QuizChoiceDto> choices;
 
     public static QuizResponseDto from(Quiz quiz) {
@@ -28,6 +29,7 @@ public class QuizResponseDto {
                 .question(quiz.getQuestion())
                 .hint(quiz.getHint())
                 .choices(choiceDtos)
+                .imgUrl(quiz.getImgUrl())
                 .build();
     }
 }

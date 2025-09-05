@@ -12,9 +12,9 @@ import java.util.List;
 @Repository
 public interface QuizRepository extends JpaRepository<Quiz, Long> {
 
-    // H2 DB에서는 RAND() 대신 RANDOM() 사용
-    @Query(value = "SELECT * FROM quiz ORDER BY RANDOM() LIMIT 1", nativeQuery = true)
-    Quiz findRandomQuiz();
+    // 1개 → N개로 변경
+    @Query(value = "SELECT * FROM quiz ORDER BY RANDOM() LIMIT :count", nativeQuery = true)
+    List<Quiz> findRandomQuizzes(@org.springframework.data.repository.query.Param("count") int count);
 
     List<Quiz> findByCategoryIn(Collection<Category> categories);
 }
