@@ -89,4 +89,4 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
             ((CookieAuthorizationRequestRepository) authorizationRequestRepository).removeAuthorizationRequestCookies(request, response);
         }
     }
-}
+}git

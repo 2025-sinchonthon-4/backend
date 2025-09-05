@@ -50,5 +50,5 @@ public class QuizController {
     public ResponseEntity<QuizResponse> getQuizById(@PathVariable Long id) {
         QuizResponse res = quizService.getQuiz(id);
         return ResponseEntity.ok(res);
-    }git
+    }
 }
