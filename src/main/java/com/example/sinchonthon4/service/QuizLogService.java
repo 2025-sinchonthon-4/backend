@@ -43,7 +43,7 @@ public class QuizLogService {
         User user = userRepository.findById(userId).orElseThrow(
                 ()-> new EntityNotFoundException("User with id " + userId + " not found")
         );
-        return quizLogRepository.findByUser(user).stream()
+        return quizLogRepository.findAllByUser(user).stream()
                 .map(quizLog -> QuizLogResponse.of(quizLog))
                 .toList();
     }
