@@ -2,7 +2,6 @@ package com.example.sinchonthon4.entity;
 
 import com.example.sinchonthon4.dto.request.UserUpdateRequestDto;
 import jakarta.persistence.*;
-import lombok.NoArgsConstructor;
 import java.time.LocalDateTime;
 import lombok.*;
 
@@ -41,7 +40,6 @@ public class User extends BaseTimeEntity implements Serializable {
     @Column(nullable = false)
     private String socialId; // 카카오에서 제공하는 고유 ID
     private String address;
-
 
     @Enumerated(EnumType.STRING)
     private Role role;

@@ -1,12 +1,13 @@
 package com.example.sinchonthon4.entity;
 
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
-@Entity
 @Getter
+@Setter
+@Builder
+@AllArgsConstructor
+@Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Category extends BaseTimeEntity {
 
@@ -19,4 +20,8 @@ public class Category extends BaseTimeEntity {
     private String name;
 
     private String description;
+
+    @Column(nullable = false)
+    private String subCategory;
+
 }

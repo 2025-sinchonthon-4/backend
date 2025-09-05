@@ -1,7 +1,6 @@
 package com.example.sinchonthon4.entity;
 
 import jakarta.persistence.*;
-import lombok.AccessLevel;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
@@ -13,7 +12,6 @@ import java.time.LocalDateTime;
 @Setter
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-
 @AllArgsConstructor
 public class QuizChoice extends BaseTimeEntity{
     @Id
