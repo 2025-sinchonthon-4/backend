@@ -22,8 +22,8 @@ public class QuizAnswerResponse {
     private List<ChoiceDto> choices;
 
     public static QuizAnswerResponse of(Quiz quiz) {
-        List<ChoiceDto> choiceDtos = quiz.getQuizChoices() != null
-                ? quiz.getQuizChoices().stream()
+        List<ChoiceDto> choiceDtos = quiz.getChoices() != null
+                ? quiz.getChoices().stream()
                 .map(ChoiceDto::of)
                 .collect(Collectors.toList())
                 : List.of();

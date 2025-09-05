@@ -63,6 +63,8 @@ public class KakaoOAuth2UserService extends DefaultOAuth2UserService {
                     .email(kakaoUserInfo.getEmail())
                     .socialType(SocialType.KAKAO)
                     .role(Role.USER)  // 기본 권한
+                    .exp(0)
+                    .level(1)
                     .build();
 
             return userRepository.save(newUser);

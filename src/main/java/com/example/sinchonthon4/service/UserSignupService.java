@@ -30,6 +30,8 @@ public class UserSignupService {
                 .nickname(join.getNickname())
                 .phone(join.getPhone())
                 .role(Role.USER)
+                .exp(0)
+                .level(1)
                 .build();
 
         userRepository.save(user);

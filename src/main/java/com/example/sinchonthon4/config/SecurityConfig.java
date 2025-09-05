@@ -52,9 +52,9 @@ public class SecurityConfig {
                 // 이 필터 체인이 적용될 경로 지정
                 .securityMatcher(
                         "/", "/home", "/login/**", "/oauth2/**", "/h2-console/**",
-                        "/api/auth/**", "/static/**", "/favicon.ico", "/auth", "/Signup",
+                        "/api/auth/login", "/static/**", "/favicon.ico", "/auth", "/Signup",
                         "/css/**", "/js/**", "/images/**", "/products/**", "/ws-chat/**",
-                        "/api/chat/**", "/ws-chat", "/farm/**"
+                        "/api/chat/**", "/ws-chat", "/farm/**", "api/auth/signup1"
                 )
                 .authorizeHttpRequests(authz -> authz.anyRequest().permitAll())
                 .oauth2Login(oauth2 -> oauth2
@@ -75,7 +75,7 @@ public class SecurityConfig {
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 // 이 필터 체인이 적용될 경로 지정
                 .securityMatcher("/api/v1/**", "/reviews/**", "/posts/**", "/comment/**",
-                        "/mypage/**", "/chat/**", "/like/**", "/pay/**", "/profile/**", "/api/chatbot/**")
+                        "/mypage/**", "/chat/**", "/like/**", "/pay/**", "/profile/**", "/api/chatbot/**", "api/auth/signup2")
                 .authorizeHttpRequests(authz -> authz
                         .requestMatchers(HttpMethod.POST, "/reviews/**").authenticated()
                         .requestMatchers(HttpMethod.DELETE, "/reviews/**").authenticated()
@@ -90,6 +90,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/like/**").authenticated()
                         .requestMatchers(HttpMethod.PATCH, "/pay/**").authenticated()
                         .requestMatchers(HttpMethod.GET, "/pay/**").authenticated()
+                        .requestMatchers(HttpMethod.POST, "/api/auth/signup2").authenticated()
                         .anyRequest().permitAll()
                 )
                 .exceptionHandling(ex -> ex

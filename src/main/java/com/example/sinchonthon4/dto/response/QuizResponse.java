@@ -1,5 +1,6 @@
 package com.example.sinchonthon4.dto.response;
 
+import com.example.sinchonthon4.entity.Category;
 import com.example.sinchonthon4.entity.Quiz;
 import com.example.sinchonthon4.entity.QuizType;
 import lombok.*;
@@ -20,14 +21,14 @@ public class QuizResponse {
         private String imgUrl;
         private String explanation;
         private String hint;
-        private String categoryName;
+        private Category category;
         private List<ChoiceDto> choices;   // 객관식 / OX → 선택지, 주관식 → 빈 리스트
 
 
         //객관식인지 체크
         public static QuizResponse fromEntity(Quiz quiz) {
-                List<ChoiceDto> choiceDtos = (quiz.getQuizChoices() != null)
-                        ? quiz.getQuizChoices().stream()
+                List<ChoiceDto> choiceDtos = (quiz.getChoices() != null)
+                        ? quiz.getChoices().stream()
                         .map(ChoiceDto::of)
                         .toList()
                         : List.of();
@@ -39,7 +40,7 @@ public class QuizResponse {
                         .imgUrl(quiz.getImgUrl())
                         .explanation(quiz.getExplanation())
                         .hint(quiz.getHint())
-                        .categoryName(quiz.getCategory().getName())
+                        .category(quiz.getCategory())
                         .choices(choiceDtos)
                         .build();
         }

@@ -18,13 +18,8 @@ public class Quiz extends BaseTimeEntity { // createdAt, updatedAt 상속
     @Column(name = "quiz_id")
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "category_id", nullable = false)
+    @Enumerated(EnumType.STRING)
     private Category category;
-
-    @OneToMany(mappedBy = "quiz",
-            fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<QuizChoice> quizChoices;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
@@ -46,8 +41,6 @@ public class Quiz extends BaseTimeEntity { // createdAt, updatedAt 상속
 
     @Column(nullable = false)
     private String hint;
-
-
 
     @OneToMany(mappedBy = "quiz", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<QuizChoice> choices = new ArrayList<>();
