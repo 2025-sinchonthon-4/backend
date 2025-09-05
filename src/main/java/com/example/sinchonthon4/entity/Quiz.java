@@ -3,6 +3,8 @@ package com.example.sinchonthon4.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.List;
+
 @Getter
 @Setter
 @Builder
