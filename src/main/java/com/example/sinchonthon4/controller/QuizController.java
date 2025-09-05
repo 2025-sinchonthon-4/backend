@@ -17,12 +17,12 @@ public class QuizController {
     public QuizController(QuizService quizService) {
         this.quizService = quizService;
     }
-    @PostMapping
-    public ResponseEntity<QuizResponse> createQuiz(@RequestBody QuizCreateRequest req) {
-        QuizResponse res = quizService.createQuiz(req);
-        return ResponseEntity.ok(res);
-
-    }
+//    @PostMapping
+//    public ResponseEntity<QuizResponse> createQuiz(@RequestBody QuizCreateRequest req) {
+//        QuizResponse res = quizService.createQuiz(req);
+//        return ResponseEntity.ok(res);
+//
+//    }
 
     @GetMapping
     public ResponseEntity<List<QuizResponse>> getQuiz(@AuthenticationPrincipal UserInfo user, @RequestParam Integer count) {

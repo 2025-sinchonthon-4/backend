@@ -92,10 +92,4 @@ public class QuizService {
         }
     }
 
-    @Transactional
-    public QuizResponse createQuiz(QuizCreateReq req){
-        Quiz quiz = Quiz.builder()
-                .
-                .build();
-    }
 }
